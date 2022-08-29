@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import {StyleSheet, Text, TextInput, View, TouchableOpacity, Image} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-function LoginForm() {
+
+export default function LoginForm({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordSecure, seePassword ] = useState(true);
@@ -12,50 +13,54 @@ function LoginForm() {
     }
 
     return(
-        <View style = {styles.loginForm} >
-            <Image
-                style={styles.logo}
-                source={require('../assets/logo.png')}
-            />
-            <View style={styles.passwordInput}>
-                <TextInput
-                    placeholder={'Email'}
-                    style={styles.textInput}
-                    textContentType={"emailAddress"}
-                    keyboardType={"email-address"}
+        <View style={styles.container}>
+            <View style = {styles.loginForm} >
+                <Image
+                    style={styles.logo}
+                    source={require('../assets/logo.png')}
                 />
-                <TextInput
-                    placeholder={'Password'}
-                    style={styles.textInput}
-                    secureTextEntry={passwordSecure}
-                    textContentType={"password"}
-
-                />
-                <TouchableOpacity style={styles.eyeIcon} onPress={togglePassword}>
-                    <Ionicons name={"eye-outline"} size={32} />
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        placeholder={'Email'}
+                        style={styles.textInput}
+                        textContentType={"emailAddress"}
+                        keyboardType={"email-address"}
+                    />
+                    <View style={styles.textInput}>
+                        <TextInput
+                            placeholder={'Password'}
+                            style={{width: '100%'}}
+                            secureTextEntry={passwordSecure}
+                            textContentType={"password"}
+                        />
+                        <TouchableOpacity style={styles.eyeIcon} onPress={togglePassword}>
+                            <Ionicons name={passwordSecure ? "eye-off-outline" : "eye-outline"} size={25} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <TouchableOpacity
+                    style= {styles.buttons}>
+                    <Text style={styles.text}>LOGIN</Text>
                 </TouchableOpacity>
-                {
-                    !passwordSecure &&
-                    (<Text style={{
-                        color: 'red',
-                        padding: 0,
-                    }}
-                    > Password Visible! </Text>)
-                }
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.navigate('Signup')
+                    }
+                    style={styles.buttons}>
+                    <Text style={styles.text}>SIGNUP</Text>
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity
-                style= {styles.loginButton}>
-                <Text style={styles.text}>LOGIN</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={styles.loginButton}>
-                <Text style={styles.text}>SIGNUP</Text>
-            </TouchableOpacity>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 
     loginForm: {
         alignItems: 'center',
@@ -66,7 +71,9 @@ const styles = StyleSheet.create({
     },
 
     textInput: {
-        width: 200,
+        flexDirection: 'row',
+        width: '90%',
+        height: '33%',
         padding: 10,
         borderColor: 'black',
         borderWidth: 1,
@@ -76,14 +83,14 @@ const styles = StyleSheet.create({
 
     text: {
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
     },
 
-    loginButton: {
+    buttons: {
         alignItems: 'center',
         justifyContent: 'center',
-        width: 300,
-        height: 40,
+        width: '100%',
+        height: '7%',
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 20,
@@ -92,10 +99,11 @@ const styles = StyleSheet.create({
     },
 
     eyeIcon: {
-        padding: 10,
+        padding: 0,
+        marginLeft: 'auto',
     },
 
-    passwordInput: {
+    inputContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
         flexWrap: 'wrap',
@@ -111,5 +119,3 @@ const styles = StyleSheet.create({
         resizeMode: "contain"
     },
 })
-
-export default LoginForm;

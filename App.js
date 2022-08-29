@@ -1,19 +1,22 @@
-import {StyleSheet, View } from 'react-native';
 import LoginForm from './components/login';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Signup from "./components/signup";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <LoginForm/>
-    </View>
-  );
+  const Stack = createNativeStackNavigator();
+    return (
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+                name="Login"
+                component={LoginForm}
+            />
+            <Stack.Screen
+                name="Signup"
+                component={Signup}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+    );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
