@@ -9,7 +9,7 @@ export default function Signup({navigation}) {
     const [password, setPassword] = useState('');
     const [college, setCollege] = useState('');
     const [passwordSecure, seePassword] = useState(true);
-    const colleges = ["UMN - Twin Cities", "UW Madison"]
+    const colleges = ["UMN - Twin Cities"]
 
     function togglePassword() {
         seePassword(visibility => !visibility);
@@ -19,32 +19,12 @@ export default function Signup({navigation}) {
     return (
         <View>
             <View style={styles.signupForm}>
-                <TextInput
-                    placeholder={'Full Name'}
-                    onChangeText={setFullName}
-                    style={styles.textInput}
-                    textContentType={"name"}
-                />
-                <TextInput
-                    placeholder={'Email'}
-                    onChangeText={setEmail}
-                    style={styles.textInput}
-                    textContentType={"emailAddress"}
-                    keyboardType={"email-address"}
-                />
-                <View
-                    style={styles.textInput}>
-                    <TextInput
-                        placeholder={'Password'}
-                        style={{width: '100%'}}
-                        onChangeText={setPassword}
-                        secureTextEntry={passwordSecure}
-                        textContentType={"password"}
-                    />
-                    <TouchableOpacity style={styles.eyeIcon} onPress={togglePassword}>
-                        <Ionicons name={passwordSecure ? "eye-off-outline" : "eye-outline"} size={25}/>
-                    </TouchableOpacity>
-                </View>
+                <Text style={styles.signupWarning}>
+                    <Text style={{color: 'red', textAlign: 'center'}}> WARNING {'\n'}</Text>
+                    Please use a valid college email ending with "<Text style={{fontWeight: 'bold'}}> .edu </Text>"
+                    to sign up. {'\n\n'}
+                    Contact us if your college is not on this list.
+                </Text>
                 <SelectDropdown
                     defaultButtonText={'Select your college'}
                     buttonStyle={styles.selection}
@@ -66,11 +46,46 @@ export default function Signup({navigation}) {
                     search
                     searchInputStyle={{borderBottomWidth: 1}}
                     searchPlaceHolder={'Search here'}
-                    searchPlaceHolderColor={'darkgrey'}
+                    searchPlaceHolderColor={'grey'}
                     renderSearchInputLeftIcon={() => {
                         return <Ionicons name={'search'} color={'#444'} size={18} />;
                     }}
                 />
+                <TextInput
+                    placeholder={'Full Name'}
+                    onChangeText={setFullName}
+                    style={styles.textInput}
+                    textContentType={"name"}
+                    autoCorrect={"none"}
+                    autoCapitalize={"words"}
+                    spellCheck={"false"}
+                />
+                <TextInput
+                    placeholder={'Email'}
+                    onChangeText={setEmail}
+                    style={styles.textInput}
+                    textContentType={"emailAddress"}
+                    keyboardType={"email-address"}
+                    autoCorrect={"none"}
+                    autoCapitalize={"none"}
+                    spellCheck={"false"}
+                />
+                <View
+                    style={styles.textInput}>
+                    <TextInput
+                        placeholder={'Password'}
+                        style={{width: '100%'}}
+                        onChangeText={setPassword}
+                        secureTextEntry={passwordSecure}
+                        textContentType={"password"}
+                        autoCorrect={"none"}
+                        autoCapitalize={"none"}
+                        spellCheck={"false"}
+                    />
+                    <TouchableOpacity style={styles.eyeIcon} onPress={togglePassword}>
+                        <Ionicons name={passwordSecure ? "eye-off-outline" : "eye-outline"} size={25}/>
+                    </TouchableOpacity>
+                </View>
                 <TouchableOpacity
                     style={styles.buttons}>
                     <Text style={styles.text}>SIGNUP</Text>
@@ -81,6 +96,16 @@ export default function Signup({navigation}) {
 }
 
 const styles = StyleSheet.create({
+    signupWarning: {
+        fontFamily: 'AlNile-Bold',
+        borderWidth: 2,
+        borderRadius: 20,
+        marginBottom: '10%',
+        width: '80%',
+        padding: '5%',
+        lineHeight: 20,
+    },
+
     selection: {
         borderColor: 'black',
         borderWidth: 1,
@@ -110,7 +135,7 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 20,
-        marginBottom: '5%',
+        marginTop: '5%',
     },
 
     text: {

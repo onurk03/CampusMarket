@@ -10,6 +10,7 @@ export default function LoginForm({ navigation }) {
 
     function togglePassword() {
         seePassword(visibility => !visibility);
+        console.log(email + ", " + password);
     }
 
     return(
@@ -25,6 +26,8 @@ export default function LoginForm({ navigation }) {
                         style={styles.textInput}
                         textContentType={"emailAddress"}
                         keyboardType={"email-address"}
+                        autoCapitalize={"none"}
+                        onChangeText={setEmail}
                     />
                     <View style={styles.textInput}>
                         <TextInput
@@ -32,22 +35,27 @@ export default function LoginForm({ navigation }) {
                             style={{width: '100%'}}
                             secureTextEntry={passwordSecure}
                             textContentType={"password"}
+                            autoCapitalize={"none"}
+                            onChangeText={setPassword}
                         />
                         <TouchableOpacity style={styles.eyeIcon} onPress={togglePassword}>
                             <Ionicons name={passwordSecure ? "eye-off-outline" : "eye-outline"} size={25} />
                         </TouchableOpacity>
                     </View>
+                    <TouchableOpacity>
+                        <Text> Forgot Password? </Text>
+                    </TouchableOpacity>
                 </View>
                 <TouchableOpacity
                     style= {styles.buttons}>
                     <Text style={styles.text}>LOGIN</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() =>
-                        navigation.navigate('Signup')
-                    }
-                    style={styles.buttons}>
-                    <Text style={styles.text}>SIGNUP</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+                    <Text style={{
+                        color: 'blue',
+                        textDecorationLine: 'underline',
+                        marginTop: '5%',
+                    }}>Don't have an account? Signup here!</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -109,7 +117,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         alignItems: 'center',
         borderBottomWidth: 1,
-        paddingBottom: 20,
+        paddingBottom: '10%',
         paddingLeft: '10%',
     },
 
