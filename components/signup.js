@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import SelectDropdown from 'react-native-select-dropdown';
+import {auth} from "../firebase.js";
+import {createUserWithEmailAndPassword} from "firebase/auth";
 
 export default function Signup({navigation}) {
     const [fullName, setFullName] = useState('');
@@ -13,9 +15,18 @@ export default function Signup({navigation}) {
 
     function togglePassword() {
         seePassword(visibility => !visibility);
-        console.log(fullName + ", " + email + ", " + "password" + ", " + college);
     }
+    function signUp() {
 
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                console.log(user);
+            }).catch((error) => {
+            console.log(error.message);
+        });
+
+    }
     return (
         <View>
             <View style={styles.signupForm}>
@@ -83,10 +94,11 @@ export default function Signup({navigation}) {
                         spellCheck={"false"}
                     />
                     <TouchableOpacity style={styles.eyeIcon} onPress={togglePassword}>
-                        <Ionicons name={passwordSecure ? "eye-off-outline" : "eye-outline"} size={25}/>
+                        <Ionicons name={passwordSecure ? "eye-outline" : "eye-off-outline"} size={25}/>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity
+                    onPress={signUp}
                     style={styles.buttons}>
                     <Text style={styles.text}>SIGNUP</Text>
                 </TouchableOpacity>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import {StyleSheet, Text, TextInput, View, TouchableOpacity, Image} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import {createUserWithEmailAndPassword} from "firebase/auth";
+import {auth} from "../firebase";
 
 
 export default function LoginForm({ navigation }) {
@@ -39,7 +41,7 @@ export default function LoginForm({ navigation }) {
                             onChangeText={setPassword}
                         />
                         <TouchableOpacity style={styles.eyeIcon} onPress={togglePassword}>
-                            <Ionicons name={passwordSecure ? "eye-off-outline" : "eye-outline"} size={25} />
+                            <Ionicons name={passwordSecure ? "eye-outline" : "eye-off-outline"} size={25} />
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity>
@@ -50,12 +52,9 @@ export default function LoginForm({ navigation }) {
                     style= {styles.buttons}>
                     <Text style={styles.text}>LOGIN</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-                    <Text style={{
-                        color: 'blue',
-                        textDecorationLine: 'underline',
-                        marginTop: '5%',
-                    }}>Don't have an account? Signup here!</Text>
+                <TouchableOpacity
+                    style={styles.buttons}>
+                    <Text style={styles.text}>SIGNUP</Text>
                 </TouchableOpacity>
             </View>
         </View>
