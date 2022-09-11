@@ -1,7 +1,7 @@
 import LoginForm from './components/login';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Signup from "./components/signup";
+import SignUp from "./components/signUp";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -13,8 +13,8 @@ export default function App() {
                 component={LoginForm}
             />
             <Stack.Screen
-                name="Signup"
-                component={Signup}
+                name="SignUp"
+                component={SignUp}
             />
           </Stack.Navigator>
         </NavigationContainer>

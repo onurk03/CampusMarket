@@ -1,9 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {collection, getFirestore, addDoc} from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-
+import {userConverter} from "./user";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -21,5 +21,14 @@ const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 const db = getFirestore(app);
 export const auth = getAuth(app);
+//
+// export async function addUserData(existingUser, newUser) {
+//   if (!existingUser) {
+//     const ref = collection(db, 'users').withConverter(userConverter);
+//     await addDoc(ref, newUser).catch(error => {
+//       console.log(error);
+//     });
+//   }
+// }
 
 export default app;

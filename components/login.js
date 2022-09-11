@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import {StyleSheet, Text, TextInput, View, TouchableOpacity, Image} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import {createUserWithEmailAndPassword} from "firebase/auth";
-import {auth} from "../firebase";
 
 
 export default function LoginForm({ navigation }) {
@@ -53,8 +51,9 @@ export default function LoginForm({ navigation }) {
                     <Text style={styles.text}>LOGIN</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                    onPress={() => navigation.navigate('SignUp')}
                     style={styles.buttons}>
-                    <Text style={styles.text}>SIGNUP</Text>
+                    <Text style={styles.text}>SIGN UP</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        height: '7%',
+        height: '8%',
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 20,
