@@ -2,10 +2,11 @@ import React, {useState} from "react";
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import SelectDropdown from 'react-native-select-dropdown';
-import {auth, addUserData} from "../firebase.js";
+import {auth, db} from "../firebase.js";
+import {User, userConverter} from "../user";
+import { doc, setDoc } from "firebase/firestore";
 import {createUserWithEmailAndPassword} from "firebase/auth";
 import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
-import {User} from "../user";
 
 export default function SignUp({navigation}) {
     // User info
@@ -34,7 +35,7 @@ export default function SignUp({navigation}) {
     /**
      * Handles user registration
      */
-    function signUp() {
+    async function signUp() {
         if (!validateInfo()) {
             console.log("Invalid inputs");
             return;
@@ -42,18 +43,22 @@ export default function SignUp({navigation}) {
 
         let user;
         createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                user = userCredential.user;
-                // const newUser = new User(user.uid, fullName, college);
-                // addUserData(existingUser, newUser).then(r => console.log(r));
-
-            }).catch((error) => {
-                if(error.code.trim() === "auth/email-already-in-use") {
-                    existingUserWarning(warning => warning = true);
-                } else {
-                    existingUserWarning(warning => warning = false);
-                }
-                console.log(error.code);
+        .then(async (userCredential) => {
+            user = userCredential.user;
+            try {
+                const ref = doc(db, "users", `${user.uid}`).withConverter(userConverter);
+                const docRef = await setDoc(ref, new User(fullName, college));
+            } catch (e) {
+                console.error(e);
+            }
+        }).catch((error) => {
+            if(error.code.trim() === "auth/email-already-in-use") {
+                existingUserWarning(warning => warning = true);
+            } else {
+                existingUserWarning(warning => warning = false);
+            }
+            console.log(error.code);
+            throw error;
         });
     }
 

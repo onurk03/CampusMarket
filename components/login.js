@@ -1,16 +1,30 @@
 import React, { useState } from 'react';
 import {StyleSheet, Text, TextInput, View, TouchableOpacity, Image} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export default function LoginForm({ navigation }) {
+    const auth = getAuth()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordSecure, seePassword ] = useState(true);
 
     function togglePassword() {
         seePassword(visibility => !visibility);
-        console.log(email + ", " + password);
+    }
+
+    function login() {
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
+                navigation.replace('Main');
+                console.log("Login Success!!");
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
     }
 
     return(
@@ -47,6 +61,7 @@ export default function LoginForm({ navigation }) {
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity
+                    onPress={login}
                     style= {styles.buttons}>
                     <Text style={styles.text}>LOGIN</Text>
                 </TouchableOpacity>
