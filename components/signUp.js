@@ -1,12 +1,11 @@
-import React, {useState} from "react";
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import SelectDropdown from 'react-native-select-dropdown';
-import {auth, db} from "../firebase.js";
-import {User, userConverter} from "../user";
+import { auth, db } from "../firebase.js";
+import { User, userConverter } from "../user";
 import { doc, setDoc } from "firebase/firestore";
-import {createUserWithEmailAndPassword} from "firebase/auth";
-import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 
 export default function SignUp({navigation}) {
     // User info
@@ -48,9 +47,13 @@ export default function SignUp({navigation}) {
             try {
                 const ref = doc(db, "users", `${user.uid}`).withConverter(userConverter);
                 const docRef = await setDoc(ref, new User(fullName, college));
+                navigation.replace("SignUpSuccess");
             } catch (e) {
                 console.error(e);
             }
+            sendEmailVerification(auth.currentUser).then(() => {
+                console.log("Email verification sent!");
+            });
         }).catch((error) => {
             if(error.code.trim() === "auth/email-already-in-use") {
                 existingUserWarning(warning => warning = true);
@@ -61,9 +64,6 @@ export default function SignUp({navigation}) {
             throw error;
         });
     }
-
-
-
 
     /**
      * Validates that correct input are provided for user creation
@@ -201,6 +201,7 @@ export default function SignUp({navigation}) {
 }
 
 const styles = StyleSheet.create({
+
     signupWarning: {
         fontFamily: 'AlNile-Bold',
         borderWidth: 2,

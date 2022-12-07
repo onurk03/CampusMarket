@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {StyleSheet, Text, TextInput, View, TouchableOpacity, Image} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 export default function LoginForm({ navigation }) {
     const auth = getAuth()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordSecure, seePassword ] = useState(true);
+    const [invalidUser, setInvalidUser] = useState(false);
+    const [needVerification, setVerification] = useState(false);
+
+    useEffect(() => {
+        setVerification((needVerification) => needVerification = false);
+        setInvalidUser((invalidUser) => invalidUser = false);
+        onAuthStateChanged(auth, (user) => {
+            if(user) {
+                if(user.emailVerified) {
+                    navigation.replace("Dashboard");
+                }
+            }
+        });
+    }, []);
 
     function togglePassword() {
         seePassword(visibility => !visibility);
@@ -17,13 +31,17 @@ export default function LoginForm({ navigation }) {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Signed in
-                const user = userCredential.user;
-                navigation.replace('Main');
+                if(auth.currentUser.emailVerified) {
+                    navigation.replace("Dashboard");
+                } else {
+                    setVerification((needVerification) => needVerification = true);
+                }
                 console.log("Login Success!!");
             })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
+                console.log(error.message);
+                setVerification((needVerification) => needVerification = false);
+                setInvalidUser((invalidUser) => invalidUser = true);
             });
     }
 
@@ -60,6 +78,14 @@ export default function LoginForm({ navigation }) {
                         <Text> Forgot Password? </Text>
                     </TouchableOpacity>
                 </View>
+                {
+                    invalidUser &&
+                    <Text style={styles.inputWarning}> Invalid Email or Password!</Text>
+                }
+                {
+                    needVerification &&
+                    <Text style={styles.inputWarning}> You need to verify your email! Check your inbox! </Text>
+                }
                 <TouchableOpacity
                     onPress={login}
                     style= {styles.buttons}>
@@ -100,6 +126,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 20,
         marginBottom: '10%',
+    },
+
+    inputWarning: {
+        marginTop: '5%',
+        color: 'red',
+        fontWeight: 'bold',
     },
 
     text: {

@@ -1,9 +1,9 @@
-import LoginForm from './components/login';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import LoginForm from './components/login';
 import SignUp from "./components/signUp";
-import Main from "./components/main";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import Dashboard from "./components/dashboard";
+import SignUpSuccess from "./components/SignUpSuccess";
 
 export default function App() {
     const Stack = createNativeStackNavigator();
@@ -20,8 +20,12 @@ export default function App() {
                 component={SignUp}
             />
             <Stack.Screen
-              name="Main"
-              component={Main}
+              name="SignUpSuccess"
+              component={SignUpSuccess}
+            />
+            <Stack.Screen
+              name="Dashboard"
+              component={Dashboard}
             />
           </Stack.Navigator>
         </NavigationContainer>
