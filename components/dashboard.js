@@ -1,41 +1,10 @@
-import { useEffect, useState } from 'react';
-import {Image, Text, TextInput, TouchableOpacity, View, StyleSheet} from "react-native";
-import { getAuth } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { User, userConverter } from "../user";
-import { db } from "../firebase";
+import {Text, View, StyleSheet } from "react-native";
 
-export default function Dashboard({navigation}) {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const [currUser, setCurrUser] = useState();
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        getUserData();
-    }, []);
-
-    async function getUserData() {
-        const docRef = doc(db, "users", user.uid).withConverter(userConverter);
-        const docSnap = await getDoc(docRef).catch((error) => console.log(error.message));
-        if(docSnap.exists()) {
-            setCurrUser(docSnap.data());
-            setLoading((loading) => loading = false);
-        } else {
-            console.log("no such doc");
-        }
-    }
-
+export default function Dashboard({navigation, route}) {
+    const user = route.params.user;
     return(
         <View style={styles.container}>
-            {
-                loading && 
-                <Text> Loading... </Text>
-            }
-            {
-                !loading &&
-            <Text> Welcome {currUser.fullName}!!</Text>
-            }
+            <Text> Welcome {user.fullName}!!</Text>
         </View>
     );
 }

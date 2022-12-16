@@ -17,7 +17,7 @@ export default function LoginForm({ navigation }) {
         onAuthStateChanged(auth, (user) => {
             if(user) {
                 if(user.emailVerified) {
-                    navigation.replace("Dashboard");
+                    navigation.replace("MainPage");
                 }
             }
         });
@@ -32,7 +32,7 @@ export default function LoginForm({ navigation }) {
             .then((userCredential) => {
                 // Signed in
                 if(auth.currentUser.emailVerified) {
-                    navigation.replace("Dashboard");
+                    navigation.replace("MainPage");
                 } else {
                     setVerification((needVerification) => needVerification = true);
                 }

@@ -47,6 +47,13 @@ export default function SignUp({navigation}) {
             try {
                 const ref = doc(db, "users", `${user.uid}`).withConverter(userConverter);
                 const docRef = await setDoc(ref, new User(fullName, college));
+                user.updateProfile({
+                    displayName: fullName
+                }).then(() => {
+                    console.log("User display name updated");
+                }).catch((err) => {
+                    console.log("Couldn't update user display name.");
+                });
                 navigation.replace("SignUpSuccess");
             } catch (e) {
                 console.error(e);
