@@ -8,16 +8,16 @@ export default function LoginForm({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordSecure, seePassword ] = useState(true);
-    const [invalidUser, setInvalidUser] = useState(false);
+    const [invalidEmail, setInvalidEmail] = useState(false);
+    const [invalidPassword, setInvalidPassword] = useState(false);
+    const [tooManyAttempts, setTooManyAttempts] = useState(false);
     const [needVerification, setVerification] = useState(false);
 
     useEffect(() => {
-        setVerification((needVerification) => needVerification = false);
-        setInvalidUser((invalidUser) => invalidUser = false);
         onAuthStateChanged(auth, (user) => {
             if(user) {
                 if(user.emailVerified) {
-                    navigation.replace("MainPage");
+                    navigation.replace("Main Page");
                 }
             }
         });
@@ -32,7 +32,7 @@ export default function LoginForm({ navigation }) {
             .then((userCredential) => {
                 // Signed in
                 if(auth.currentUser.emailVerified) {
-                    navigation.replace("MainPage");
+                    navigation.replace("Main Page");
                 } else {
                     setVerification((needVerification) => needVerification = true);
                 }
@@ -41,7 +41,13 @@ export default function LoginForm({ navigation }) {
             .catch((error) => {
                 console.log(error.message);
                 setVerification((needVerification) => needVerification = false);
-                setInvalidUser((invalidUser) => invalidUser = true);
+                if(error.code == "auth/user-not-found" || error.code == "auth/invalid-email") {
+                    setInvalidEmail((invalidEmail) => invalidEmail = true);
+                } else if(error.code == "auth/wrong-password" || error.code == "auth/missing-password") {
+                    setInvalidPassword((invalidPassword) => invalidPassword = true);
+                } else if(error.code == "auth/too-many-requests") {
+                    setTooManyAttempts((tooManyAttempts) => tooManyAttempts = true);
+                }
             });
     }
 
@@ -50,7 +56,7 @@ export default function LoginForm({ navigation }) {
             <View style = {styles.loginForm} >
                 <Image
                     style={styles.logo}
-                    source={require('../assets/logo.png')}
+                    source={require('../../assets/logo.png')}
                 />
                 <View style={styles.inputContainer}>
                     <TextInput
@@ -59,7 +65,10 @@ export default function LoginForm({ navigation }) {
                         textContentType={"emailAddress"}
                         keyboardType={"email-address"}
                         autoCapitalize={"none"}
-                        onChangeText={setEmail}
+                        onChangeText={(text) => {
+                            setEmail(text);
+                            setInvalidEmail(invalidEmail => invalidEmail = false);
+                        }}
                     />
                     <View style={styles.textInput}>
                         <TextInput
@@ -68,23 +77,34 @@ export default function LoginForm({ navigation }) {
                             secureTextEntry={passwordSecure}
                             textContentType={"password"}
                             autoCapitalize={"none"}
-                            onChangeText={setPassword}
+                            onChangeText={(text) => {
+                                setPassword(text);
+                                setInvalidPassword(invalidPassword => invalidPassword = false);
+                            }}
                         />
                         <TouchableOpacity style={styles.eyeIcon} onPress={togglePassword}>
                             <Ionicons name={passwordSecure ? "eye-outline" : "eye-off-outline"} size={25} />
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Forgot Password')}>
                         <Text> Forgot Password? </Text>
                     </TouchableOpacity>
                 </View>
                 {
-                    invalidUser &&
-                    <Text style={styles.inputWarning}> Invalid Email or Password!</Text>
+                    invalidEmail &&
+                    <Text style={styles.inputWarning}> Invalid Email!</Text>
+                }
+                {
+                    invalidPassword &&
+                    <Text style={styles.inputWarning}> Invalid Password!</Text>
                 }
                 {
                     needVerification &&
                     <Text style={styles.inputWarning}> You need to verify your email! Check your inbox! </Text>
+                }
+                {
+                    tooManyAttempts &&
+                    <Text style={styles.inputWarning}> Too many attempts! Try again later or reset your password </Text>
                 }
                 <TouchableOpacity
                     onPress={login}
@@ -92,7 +112,7 @@ export default function LoginForm({ navigation }) {
                     <Text style={styles.text}>LOGIN</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('SignUp')}
+                    onPress={() => navigation.navigate('Sign Up')}
                     style={styles.buttons}>
                     <Text style={styles.text}>SIGN UP</Text>
                 </TouchableOpacity>

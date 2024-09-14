@@ -1,9 +1,10 @@
-import {StyleSheet, Text, TextInput, View, TouchableOpacity, Image} from 'react-native';
-export default function SignUpSuccess({navigation}) {
+import {StyleSheet, Text, View} from 'react-native';
+export default function ForgotPasswordSuccess({navigation}) {
 
     return(
         <View style={styles.container}>
-            <Text style={styles.text}> Sign Up Successful!! {"\n"} Please verify your account through your email!</Text>
+            <Text style={styles.text}> Successful!!</Text>
+            <Text style={styles.text}> Follow the link sent to your email to reset your password!</Text>
         </View>
     );
 }
@@ -18,7 +19,10 @@ const styles = StyleSheet.create({
 
     text: {
         fontWeight: 'bold',
+        fontSize: '15%',
         color: 'black',
+        alignItems: 'center',
+        justifyContent: 'center',
         padding: '5%'
     },
 

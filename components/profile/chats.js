@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 export default function Chats({route, navigation}) {
     return(
       <View style={styles.container}>
-        <Text>Chats: </Text>
+        <Text style={styles.text}>Chats: </Text>
       </View>
     )
 }
@@ -15,4 +15,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    text: {
+        fontSize: '20%',
+    }
 })

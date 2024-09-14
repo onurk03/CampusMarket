@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import SelectDropdown from 'react-native-select-dropdown';
-import { auth, db } from "../firebase.js";
-import { User, userConverter } from "../user";
+import { auth, db } from "../../services/firebase.js";
+import { User, userConverter } from "../../services/user.js";
 import { doc, setDoc } from "firebase/firestore";
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 
 export default function SignUp({navigation}) {
     // User info
@@ -22,7 +22,7 @@ export default function SignUp({navigation}) {
     const [falseCollege, collegeWarning] = useState(false);
     const [existingUser, existingUserWarning] = useState(false);
 
-    const colleges = ["UMN - Twin Cities"]
+    const colleges = ["UW-Madison", "Edgewood"]
 
     /**
      * Toggles visibility of password
@@ -45,9 +45,9 @@ export default function SignUp({navigation}) {
         .then(async (userCredential) => {
             user = userCredential.user;
             try {
-                const ref = doc(db, "users", `${user.uid}`).withConverter(userConverter);
-                const docRef = await setDoc(ref, new User(fullName, college));
-                user.updateProfile({
+                const userRef = doc(db, "users", `${user.uid}`).withConverter(userConverter);
+                await setDoc(userRef, new User(fullName, college));
+                updateProfile(user, {
                     displayName: fullName
                 }).then(() => {
                     console.log("User display name updated");
@@ -58,6 +58,7 @@ export default function SignUp({navigation}) {
             } catch (e) {
                 console.error(e);
             }
+
             sendEmailVerification(auth.currentUser).then(() => {
                 console.log("Email verification sent!");
             });

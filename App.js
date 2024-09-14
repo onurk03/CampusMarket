@@ -1,32 +1,42 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import MainPage from './components/mainpage';
-import LoginForm from './components/login';
-import SignUp from "./components/signUp";
-import SignUpSuccess from "./components/SignUpSuccess";
+import MainPage from './components/common/mainpage';
+import LoginForm from './components/auth/login';
+import SignUp from "./components/auth/signUp";
+import SignUpSuccess from "./components/auth/SignUpSuccess";
+import ForgotPassword from './components/auth/forgotPassword';
+import ForgotPasswordSuccess from './components/auth/forgotPasswordSuccess';
 
 export default function App() {
     const Stack = createNativeStackNavigator();
 
     return(
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName='Login'>
           <Stack.Screen
             name="Login"
             component={LoginForm}
           />
           <Stack.Screen
-            name="SignUp"
+            name="Sign Up"
             component={SignUp}
           />
           <Stack.Screen
-            name="SignUpSuccess"
+            name="Sign Up Success"
             component={SignUpSuccess}
           />
           <Stack.Screen 
-            name="MainPage" 
+            name="Main Page" 
             component={MainPage} 
             options={{headerShown: false}}
+          />
+          <Stack.Screen 
+            name="Forgot Password" 
+            component={ForgotPassword} 
+          />
+          <Stack.Screen 
+            name="Forgot Password Success" 
+            component={ForgotPasswordSuccess} 
           />
         </Stack.Navigator>
       </NavigationContainer>

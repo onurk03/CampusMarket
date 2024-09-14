@@ -4,15 +4,15 @@ import { Text, View, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { userConverter } from "../user";
-import { db } from "../firebase.js";
+import { userConverter } from "../../services/user.js";
+import { db } from "../../services/firebase.js";
 import { doc, getDoc } from "firebase/firestore";
-import Dashboard from "./dashboard";
-import UserInfo from "./userInfo";
-import Chats from "./chats";
+import Dashboard from "../profile/dashboard.js";
+import UserInfo from "../profile/userInfo.js";
+import Chats from "../profile/chats.js";
+import Sell from "../profile/sell.js";
 
 export default function MainPage({ navigation }) {
-    const Stack = createNativeStackNavigator();
     const Tab = createBottomTabNavigator();
     const auth = getAuth();
     const user = auth.currentUser;
@@ -49,17 +49,29 @@ export default function MainPage({ navigation }) {
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
                     let rn = route.name;
-
                     if(rn == "Dashboard") {
                         iconName = focused ? 'home' : 'home-outline';
                     } else if (rn == "User") {
                         iconName = focused ? 'person' : 'person-outline';
+                    }  else if(rn == "Sell") {
+                        iconName = focused ? 'pricetag' : 'pricetag-outline';
                     } else if (rn == "Chats") {
                         iconName = focused ? 'chatbox' : 'chatbox-outline';
                     }
 
                     return <Ionicons name={iconName} size={size} color={color}/>
-                }
+                },
+                tabBarLabelStyle: {
+                    margin: 0,
+                    fontSize: "12%",
+                },
+                tabBarIconStyle: {
+                    marginBottom: 0,
+                    marginTop: "10%",
+                },
+                tabBarStyle: {
+                    height: "10%",
+                },
             })}
         >
             <Tab.Screen
@@ -70,6 +82,11 @@ export default function MainPage({ navigation }) {
             <Tab.Screen
                 name="Dashboard"
                 component={Dashboard}
+                initialParams={{ user: currUser }}
+            />
+            <Tab.Screen
+                name="Sell"
+                component={Sell}
                 initialParams={{ user: currUser }}
             />
             <Tab.Screen
